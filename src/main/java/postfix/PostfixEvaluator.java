@@ -37,28 +37,64 @@ public class PostfixEvaluator {
 	 * 	a valid expression in Postfix notation
 	 */
 	double eval( ) throws MalformedExpressionException {
-		// TODO: Implement this method.
-		// The code provided here is for illustration only, and
-		// can be deleted when you write your implementation.
 
-		// Using a stack makes it very simple to evaluate the
-		// arithmetic expression.
-		// See http://docs.oracle.com/javase/8/docs/api/java/util/Stack.html
-		
-		// Use the Scanner to get the elements (tokens) in the
-		// arithmetic expression.
-		
+		Stack arithmeticStack = new Stack();
 		Scanner scanner = new Scanner(arithmeticExpr);
+		Double Operand1, Operand2;
+		String Operator;
+		double instantResult;
+
 		Token currToken = scanner.getToken();
-		
-		// now process the token, etc.
-		// You should read the implementation of the Token class
-		// to determine what methods you can and should use.
-		
-		// It is sufficient to support the four basic operations:
-		// addition, subtraction, multiplication & division.
-		
-		return 0.0;
+
+		while (!scanner.isEmpty()){
+
+				if (currToken.isDouble()) {
+					arithmeticStack.push(currToken.getValue());
+					scanner.eatToken();
+					currToken = scanner.getToken();
+				}
+				else {
+					if (!arithmeticStack.isEmpty())
+					    Operand2 = (Double) arithmeticStack.pop();
+					else
+						throw new MalformedExpressionException();
+					if (!arithmeticStack.isEmpty())
+						Operand1 = (Double) arithmeticStack.pop();
+					else
+						throw new MalformedExpressionException();
+
+					Operator = currToken.toString();
+
+					switch (Operator) {
+						case "+":
+							instantResult = Operand1 + Operand2;
+							arithmeticStack.push(instantResult);
+							break;
+
+						case "-":
+							instantResult = Operand1 - Operand2;
+							arithmeticStack.push(instantResult);
+							break;
+
+						case "*":
+							instantResult = Operand1 * Operand2;
+							arithmeticStack.push(instantResult);
+							break;
+
+						case "/":
+							instantResult = Operand1 / Operand2;
+							arithmeticStack.push(instantResult);
+							break;
+					}
+
+					scanner.eatToken();
+					currToken = scanner.getToken();
+
+				}
+
+		}
+
+		return (Double) arithmeticStack.pop();
 	}
 	
 }
